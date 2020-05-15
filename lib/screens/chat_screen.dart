@@ -95,6 +95,9 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class MessagesStream extends StatelessWidget {
+  // This is different from AppBrewery's solution => They moved
+  // the `firestore` variable declaration outside of the _ChatScreenState
+  // class and used the variable in this class.
   MessagesStream({this.stream});
 
   final Stream<QuerySnapshot> stream;
