@@ -73,7 +73,7 @@ class _ChatScreenState extends State<ChatScreen> {
             StreamBuilder<QuerySnapshot>(
                 stream: _store.collection('messages').snapshots(),
                 builder: (context, snapshot) {
-                  List<Text> messageWidgets = [];
+                  List<MessageBubble> messageWidgets = [];
                   if (!snapshot.hasData) {
                     return Center(
                       child: CircularProgressIndicator(
@@ -84,15 +84,17 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   final messages = snapshot.data.documents;
                   for (dynamic message in messages) {
-                    messageWidgets.add(Text(
-                      "${message.data['message']} ${message.data['sender']}",
-                      style: TextStyle(
-                        fontSize: 50,
-                      ),
-                    ));
+                    messageWidgets.add(MessageBubble(
+                        text: message.data['message'],
+                        sender: message.data['sender']));
                   }
 
-                  return Expanded(child: ListView(children: messageWidgets));
+                  return Expanded(
+                    child: ListView(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                        children: messageWidgets),
+                  );
                 }),
             Container(
               decoration: kMessageContainerDecoration,
@@ -124,6 +126,45 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class MessageBubble extends StatelessWidget {
+  MessageBubble({this.text, this.sender});
+
+  final String text;
+  final String sender;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Text(
+            sender,
+            style: TextStyle(color: Colors.black54),
+          ),
+          Material(
+            borderRadius: BorderRadius.circular(30),
+            elevation: 5,
+            color: Colors.lightBlueAccent,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
