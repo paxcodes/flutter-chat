@@ -70,32 +70,7 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            StreamBuilder<QuerySnapshot>(
-                stream: _store.collection('messages').snapshots(),
-                builder: (context, snapshot) {
-                  List<MessageBubble> messageWidgets = [];
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        backgroundColor: Colors.lightBlueAccent,
-                      ),
-                    );
-                  }
-
-                  final messages = snapshot.data.documents;
-                  for (dynamic message in messages) {
-                    messageWidgets.add(MessageBubble(
-                        text: message.data['message'],
-                        sender: message.data['sender']));
-                  }
-
-                  return Expanded(
-                    child: ListView(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                        children: messageWidgets),
-                  );
-                }),
+            MessagesStream(stream: _store.collection('messages').snapshots()),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -128,6 +103,40 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
     );
+  }
+}
+
+class MessagesStream extends StatelessWidget {
+  MessagesStream({this.stream});
+
+  final Stream<QuerySnapshot> stream;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+        stream: stream,
+        builder: (context, snapshot) {
+          List<MessageBubble> messageWidgets = [];
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.lightBlueAccent,
+              ),
+            );
+          }
+
+          final messages = snapshot.data.documents;
+          for (dynamic message in messages) {
+            messageWidgets.add(MessageBubble(
+                text: message.data['message'], sender: message.data['sender']));
+          }
+
+          return Expanded(
+            child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                children: messageWidgets),
+          );
+        });
   }
 }
 
