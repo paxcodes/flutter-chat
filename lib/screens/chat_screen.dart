@@ -120,7 +120,7 @@ class MessagesStream extends StatelessWidget {
             );
           }
 
-          final messages = snapshot.data.documents;
+          final messages = snapshot.data.documents.reversed;
           for (dynamic message in messages) {
             String sender = message.data['sender'];
             messageWidgets.add(
@@ -133,6 +133,7 @@ class MessagesStream extends StatelessWidget {
 
           return Expanded(
             child: ListView(
+                reverse: true,
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 children: messageWidgets),
           );
