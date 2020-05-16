@@ -24,7 +24,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, FirebaseUser> args = ModalRoute.of(context).settings.arguments;
+    final Map<String, FirebaseUser> args =
+        ModalRoute.of(context).settings.arguments;
     final FirebaseUser loggedInUser = args["loggedInUser"];
 
     return Scaffold(
