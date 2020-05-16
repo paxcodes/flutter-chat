@@ -15,28 +15,18 @@ class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   final _store = Firestore.instance;
-  FirebaseUser loggedInUser;
   String messageText;
 
   @override
   void initState() {
     super.initState();
-    getCurrentUser();
-  }
-
-  void getCurrentUser() async {
-    try {
-      final user = await _auth.currentUser();
-      if (user != null) {
-        loggedInUser = user;
-      }
-    } catch (e) {
-      print(e);
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    Map<String, FirebaseUser> args = ModalRoute.of(context).settings.arguments;
+    final FirebaseUser loggedInUser = args["loggedInUser"];
+
     return Scaffold(
       appBar: AppBar(
         leading: null,
@@ -108,7 +98,7 @@ class MessagesStream extends StatelessWidget {
   MessagesStream({this.stream, this.loggedInUser});
 
   final Stream<QuerySnapshot> stream;
-  FirebaseUser loggedInUser;
+  final FirebaseUser loggedInUser;
 
   @override
   Widget build(BuildContext context) {

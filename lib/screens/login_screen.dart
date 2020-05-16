@@ -78,7 +78,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             email: email, password: password);
                     if (authResult != null) {
                       print(authResult);
-                      Navigator.pushNamed(context, ChatScreen.id);
+                      Navigator.pushNamed(context, ChatScreen.id,
+                          arguments: <String, FirebaseUser>{
+                            'loggedInUser': authResult.user
+                          });
                     }
                   } catch (e) {
                     print(e);
