@@ -57,7 +57,10 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             MessagesStream(
-              stream: _store.collection('messages').snapshots(),
+              stream: _store
+                  .collection('messages')
+                  .orderBy('timestamp')
+                  .snapshots(),
               loggedInUser: loggedInUser,
             ),
             Container(
@@ -77,6 +80,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   FlatButton(
                     onPressed: () {
                       _store.collection('messages').add({
+                        'timestamp': Timestamp.now(),
                         'sender': loggedInUser.email,
                         'message': messageText,
                       });
